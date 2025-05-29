@@ -19,6 +19,23 @@ class Less
         ];
     }
 
+    private function filterColors($text) {
+        return preg_replace_callback(
+
+            '/\\x1b[^0-9]{0,1}[0-9;]*[^0-9;]{1}/',
+
+            function($match) {
+
+                if (preg_match('/^\\x1b\\[(m|(38|48);5;[0-9;]+m)$/',$match[0])) {
+                    return $match[0];
+                } else {
+                    return '';
+                }
+            },
+            $text)
+            ;
+    }
+
     public function onInitDone() {
         global $SETTINGS;
         if (
@@ -38,21 +55,6 @@ class Less
 
     public function on132Mode($mode) {
         if ($this->enabled == false) return null;
-
-        echo "\033c";
-
-        if (getConfig('tty.setDefaultColors',false)) {
-            echo "\033]10;rgb:C/C/C\007";
-            echo "\033]11;rgb:0/0/0\007";
-        }
-
-        echo "\033[0m";
-        echo "\033[2J";
-        echo "\033[3J";
-        echo "\033[?3h";
-        echo "\033[132$|";
-        echo "\033[44*|";
-
         return true;
     }
 
@@ -84,12 +86,28 @@ class Less
         if ($this->enabled == false) return null;
 
         $text = str_replace(["\r\n","\r"],"\n",$text);
+        $text = $this->filterColors($text);
+
         $this->text = explode("\n",$text);
 
         $this->lines = count($this->text);
         $this->curPos = 0;
         $this->maxPos = ($this->lines - $this->screenHeight) + 1;
 
+        echo "\033c";
+
+        if (getConfig('tty.setDefaultColors',false)) {
+            echo "\033]10;rgb:C/C/C\007";
+            echo "\033]11;rgb:0/0/0\007";
+        }
+
+        echo "\033[0m";
+        echo "\033[2J";
+        echo "\033[3J";
+        echo "\033[?3h";
+        echo "\033[132$|";
+        echo "\033[44*|";
+        
         readline_callback_handler_install('', function () {});
 
         echo "\033[?25l";
