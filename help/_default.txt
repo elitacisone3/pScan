@@ -1,0 +1,14 @@
+<{head 80 7}>~
+<{C F B}>~
+<{- 1}>~
+{{F}} Indice della guida:
+<{C 7 3}>~
+<{M 16 2 Capitolo}>{{3}} Descrizione
+<{C 7 A}>~
+<{#Index}>~
+<{/}>~
+<{- 1}>~
+<{C 7 7}>~
+<{L 2}>Digitare:
+<{L 4}>{{3}} %%ME%% {{A}} --help capitolo {{7}}
+<{L 2}>Per visualizzare la sezione di interesse.

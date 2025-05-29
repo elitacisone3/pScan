@@ -1,0 +1,49 @@
+<{title Legenda tabella giornaliero}>~
+<{data pri 5000}>~
+<{head 80 7}>~
+{{F}} Legenda tabella giornaliero:
+<{C 7 A}>~
+<{L 2}>{{A}} Modalità normale:
+
+<{M 6 4 *}>Mappa di calore:
+
+{{7}} {{█07}} {{█04}} {{█0C}} {{█0D}}
+
+<{/}>~
+<{C 7 A}>~
+<{L 4}>{{A}} Simboli nella tabella oraria: {{7}}
+<{M 6 4 *}>I numeri si riferiscono alla cifra più bassa dell'ora, possono essere sostituiti col carattere "·" utilizzando l'opzione -D
+<{M 6 4 *}>Suddivisione della giornata:
+{{N03}} Notte
+{{M03}} Mattina
+{{P03}} Pomeriggio
+{{S03}} Sera
+<{M 6 4 *}>Nella modalità override -O, sono riportati i numeri in esadecimale delle sovrapposizioni nel conteggio delle ore.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{A}} Modalità nomi o mappa:
+<{M 6 4 *}>Numero di progetti sovrapposti:
+
+{{1C4}} {{2C4}} {{3C4}} {{4C4}} {{5C4}} {{6C4}} {{7C4}} {{8C4}} {{9C4}} {{+C0}}
+
+<{M 6 4 *}>Altri simboli sono assegnati ai singoli progetti. Alla fine del report ci sarà una legenda con tutti i progetti.
+È anche possibile usando l'opzione --nomi o --mappa, vedere a destra una classifica dei progetti che appaiono più spesso, in ordine decrescente.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{A}} Colonne: {{7}}
+<{M 8 2 GF}>In questa colonna sono riportate le iniziali dei giorni della settimana. Il giorno mercoledì è segnalato con una "E".
+Se i giorni sono colorati di rosso, sono festivi. In questa colonna i giorni festivi sono anche segnalati con il simbolo {{■0D}}
+<{M 8 2 C}>Questa colonna riporta graficamente la continuità dei periodi di lavoro.
+<{M 8 2 Dalle}>Indica l'ora più vicina a mezzanotte.
+<{M 8 2 Alle}>Indica l'ora più vicina a alle 23:59.
+<{M 8 2 I}>Numero di sequenze nella giornata.
+<{M 8 2 Tot}>Numero di caselle contate nella giornata.
+<{M 8 2 G.Tot}>Grafico orario.
+<{M 8 2 Liv1}>Grafico livello 1
+<{M 8 2 Liv2}>Grafico livello 2
+<{M 8 2 Liv3}>Grafico livello 3
+<{M 8 2 Liv4}>Grafico livello 4
+<{M 8 2 Ov}>Livello override caselle.
+<{M 8 2 Cnt}>Conteggio caselle giornaliero.
+<{M 8 2 c.Tot}>Somma totale oraria (al minuto).
+<{M 8 2 s.Tot}>Somma totale oraria (arrotondata).

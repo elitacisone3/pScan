@@ -1,0 +1,29 @@
+<{title Esempi di comandi e configurazioni}>~
+<{desc È una rapida lista dei comandi e opzioni principali per un uso semplice del programma}>~
+<{data pri 10000}>~
+<{head 80 7}>~
+<{C 7 A}>~
+{{F}} Esempi e comandi principali: {{7}}
+
+<{L 2}>{{F}} Aggiungere un progetto alla configurazione:
+<{L 4}>{{3}} %%ME%% {{A}} {{A}} --aggiungi <progetto> [ --nome <nome> ] [ --simbolo <codice> ] [ --titolo <titolo> ]
+<{L 2}>{{F}} Rimuove un progetto dalla configurazione:
+<{L 4}>{{3}} %%ME%% {{A}} --rimuovi <progetto>
+<{L 2}>{{F}} Visualizza la tabella dei progetti:
+<{L 4}>{{3}} %%ME%% {{A}} --tabella
+<{L 2}>{{F}} Visualizza i dati di un progetto:
+<{L 4}>{{3}} %%ME%% {{A}} -p <progetto>
+<{L 2}>{{F}} Visualizza i dati mensili:
+<{L 4}>{{3}} %%ME%% {{A}} --mesi -p <progetto>
+<{L 2}>{{F}} Visualizza tutti i progetti:
+<{L 4}>{{3}} %%ME%% {{A}} --tutti
+<{L 2}>{{F}} Visualizza il mensile totale:
+<{L 4}>{{3}} %%ME%% {{A}} --tutti --mesi
+<{L 2}>{{F}} Configura tutti i progetti:
+<{L 4}>{{3}} %%ME%% {{A}} --crw <directoryProgetti> --aggiungi TUTTO
+<{L 2}>{{F}} Seleziona i progetti per nome:
+<{L 4}>{{3}} %%ME%% {{A}} --pro <progetto> --pro <progetto> ...
+<{L 2}>{{F}} Seleziona i progetti per gruppo:
+<{L 4}>{{3}} %%ME%% {{A}} --gruppo <nomeGruppo>
+<{L 2}>{{F}} Visualizza la tavolozza dei colori:
+<{L 4}>{{3}} %%ME%% {{A}} --palette

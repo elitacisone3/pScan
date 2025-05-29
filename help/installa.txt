@@ -1,0 +1,22 @@
+<{title Installazione di %%ME%%}>~
+<{desc Come installare il programma per usarlo facilmente}>~
+<{data pri 900}>~
+<{head 80 7}>~
+<{C 7 A}>~
+{{F}} Installazione: {{7}}
+<{M 4 2 *}>{{F}} Per installare %%ME%% è sufficiente una riga di comando, nella quale sono specificate tutte le directory dei progetti.
+<{L 4}>{{3}} %%ME%% {{A}} --crw <percorso> --crw <percorso> --aggiungi TUTTO
+<{M 4 2 *}>{{F}} In alternativa si possono usare dei file con liste di directory di progetto.
+<{L 4}>{{3}} %%ME%% {{A}} -L <fileLista> -L <fileLista> --aggiungi TUTTO
+<{M 4 2 *}>{{F}} Oppure si possono specificare le singole directory.
+<{L 4}>{{3}} %%ME%% {{A}} -P <progetto> -P <progetto> --aggiungi TUTTO
+<{M 4 2 *}>{{F}} Si possono anche usare assieme tutte queste possibilità.
+<{L 4}>{{3}} %%ME%% {{A}} -P <progetto> -L <fileLista> -crw <percorso> --aggiungi TUTTO
+<{M 4 2 *}>{{F}} L'opzione {{A}} --aggiungi TUTTO {{F}} è quella che installa la lista dei progetti nei file di configurazione.
+<{M 4 2 *}>{{F}} La scansione con {{A}} --crw {{F}} includerà solo i tipi di progetto riconosciuti con i plugin di default.
+Modifica la configurazione aggiungendo i plugin prima dell'installazione.
+<{M 4 2 *}>{{F}} Prima di installare può essere prudente visualizzare la lista dei progetti che saranno inclusi.
+<{L 4}>{{3}} %%ME%% {{A}} -P <progetto> -L <fileLista> -crw <percorso> --mostra -q
+<{M 4 2 *}>{{F}} %%ME%% riconosce le copie dei progetti, quindi seleziona quella più recente. Per vedere questo processo di selezione usare l'opzione {{A}} -v {{F}}.
+Se si vuole evitare questo comportamento, sarà sufficiente aggiungere l'opzione {{A}} -u
+<{L 4}>{{3}} %%ME%% {{A}} -P <progetto> -L <file> -crw <percorso> --aggiungi TUTTO -u -v

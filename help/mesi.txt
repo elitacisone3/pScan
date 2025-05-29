@@ -1,0 +1,45 @@
+<{title Legenda tabella mensile}>~
+<{head 80 7}>~
+<{data pri 4990}>~
+{{F}} Legenda tabella mensile:
+<{C 7 A}>~
+<{L 2}>{{A}} Modalità normale:
+
+{{7}} Simboli nella tabella giorni:
+<{M 6 4 *}>Mappa di calore:
+
+{{7}} {{░04}} {{▒04}} {{▓0C}} {{█0D}}
+
+░ ▒ ▓ █
+
+<{M 6 4 *}>I numeri si riferiscono alla cifra più bassa della data, possono essere sostituiti col carattere "·" utilizzando l'opzione -D
+<{M 6 4 *}>Se i numeri, oppure i puntini "·" hanno lo sfondo rosso, allora sono giorni festivi.
+<{M 6 4 *}>Nella modalita override i numeri sono espressi in esadecimale e si riferiscono al numero di riscritture dell'giorno sovrapposte.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{A}} Modalità mappa e nomi:
+
+{{7}} Simboli nella tabella giorni:
+<{M 6 4 *}>Numero di progetti sovrapposti:
+
+{{170}} {{270}} {{370}} {{470}} {{570}} {{670}} {{770}} {{870}} {{970}} {{*C0}}
+
+<{M 6 4 *}>Altri simboli sono assegnati ai singoli progetti. Alla fine del report ci sarà una legenda con tutti i progetti.
+È anche possibile usando l'opzione --nomi o --mappa, vedere a destra una classifica dei progetti che appaiono più spesso, in ordine decrescente.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{A}} Colonne: {{7}}
+<{M 8 2 AAAA}>Anno di riferimento.
+<{M 8 2 MM}>Mese di riferimento.
+<{M 8 2 Da}>Il giorno più vicino a 1.
+<{M 8 2 a}>Il giorno più vicino all'ultimo.
+<{M 8 2 Liv}>Somma ore su tutti i livelli da 1 a 4.
+<{M 8 2 G.Liv}>Grafico ore mensili livelli da 1 a 4.
+<{M 8 2 Nu}>Numero giorni con caselle / ore.
+<{M 8 2 Cas}>Numero di ore / caselle mensili.
+<{M 8 2 G.Ore}>Grafico ore mensili.
+<{M 8 2 G.Fes}>Grafico ore mensili in festivo.
+<{M 8 2 Ore}>Somma ore mensili.
+<{M 8 2 Liv}>Ore mensili livelli da 1 a 4.
+<{M 8 2 T.F.}>Ore mensili in festivo.
+<{M 8 2 Tot}>Conteggio totale ore.
