@@ -19,4 +19,22 @@ Esistono diverse modalità di visualizzazione e personalizzazione.
 
 Si possono vedere i dati, con i grafici, divisi in modalita giornaliero (ora per ora), oppure mensile (giorno per giorno).
 
-Attenzione però: Richiede una console che supporta i colori e almeno 132 colonne.
+Attenzione però: La modalità di visualizzazione è tramite il terminale e richiede una console che supporta i colori e almeno 132 colonne.
+
+Funziona anche sotto Windows, però in questo caso alcune funzionalità sarano limitate. È anche possibile intallarlo, quindi legge la configurazione da /etc/pScan oppure dalla home utente. Anche sui sistemi windows è disponbilie questa funzionalità.
+
+Si possono anche configurare i progetti specificando un percorso, un mome, un simbolo sulla mappa (Questa funzione può essere svolta automaticamente).
+
+# Installazione:
+
+L'installazione è manuale, ma la configurazione è molto più rapida. Consulta il manuale tramite l'opzione --help del programma.
+
+./pScan.php --crw &lt;percorso progetti1&gt; --crw &lt;percorso progetti2&gt; -P &lt;progetto3&gt; -P &lt;progetto4&gt; --aggiungi TUTTO 
+
+# Visualizzare le mappe:
+
+./pScan.php --@dump --mappa --nomi --compatto --simboli --mesi
+
+oppure:
+
+./pScan.php --@dump --mesi
