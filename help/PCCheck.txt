@@ -1,0 +1,8 @@
+<{title PCCheck I/O}>~
+<{data pri 50}>~
+<{head 80 7}>~
+{{F}} È un sistema di monitoraggio I/O di risorse e programmi:
+<{C 7 A}>~
+<{L 2}>Consente di tenere sotto controllo alcuni processi del sistema e di vedere le statistiche con la stessa logica dei progetti.
+In alternativa si può associare un processo di una IDE e quindi monitorare i progetti.
+Richiede l'installazione di un programma extra per poter essere utilizzato.
