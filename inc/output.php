@@ -16,6 +16,7 @@ function outDaily($data) {
     $doEmpty = isset($OPT['e']) || $fullEmpty;
     $isHead = !isset($OPT['N']);
     $compact = isset($OPT['compatto']);
+    $noH = $compact || isset($OPT['no-ore']);
 
     $inCont = false;
 
@@ -57,7 +58,7 @@ function outDaily($data) {
     }
 
     if ($SETTINGS['hr']) hr();
-    if ($SETTINGS['head']) outDailyHeader($doHeat,$doOvr,$headCx,true, $compact ,$hasPlugin);
+    if ($SETTINGS['head']) outDailyHeader($doHeat,$doOvr,$headCx,true, $compact ,$hasPlugin,$noH);
     $cLine = 0;
 
     foreach ($days as $day) {
@@ -72,14 +73,20 @@ function outDaily($data) {
                         $cLine++;
                         if ($cLine == $SETTINGS['scroll']) {
                             $cLine = 0;
-                            outDailyHeader($doHeat,$doOvr,$headCx,false, $compact,$hasPlugin);
+                            outDailyHeader($doHeat,$doOvr,$headCx,false, $compact,$hasPlugin,$noH);
                         }
                     }
 
                     $tcr = $d * 86400;
                     tty(7,0, gmdate('d/m/Y',$tcr));
                     tty(8,0,' --');
-                    tty(7,0, " \x01 ..:.. ..:.. ");
+
+                    if ($noH) {
+                        tty(7,0, " \x01 ");
+                    } else {
+                        tty(7,0, " \x01 ..:.. ..:.. ");
+                    }
+
                     if (!$compact) tty(7,0,fixLen(0,2));
                     tty(1,0, '│');
                     echo str_repeat(' ',$headCx);
@@ -124,7 +131,7 @@ function outDaily($data) {
             $cLine++;
             if ($cLine == $SETTINGS['scroll']) {
                 $cLine = 0;
-                outDailyHeader($doHeat,$doOvr,$headCx,false, $compact,$hasPlugin);
+                outDailyHeader($doHeat,$doOvr,$headCx,false, $compact,$hasPlugin,$noH);
             }
         }
 
@@ -134,9 +141,11 @@ function outDaily($data) {
         tty($day['fest'] ? 13:3,0, $day['fest'] ? '■':'·');
         echo  ' ' ;
         tty(11,0, $CONT_CHAR[$day['cont']]);
-        echo  ' ' ;
-        tty(3,0,tcrToTime($day['min']).' ');
-        tty(3,0,tcrToTime($day['max']).' ');
+        if (!$noH) {
+            echo  ' ' ;
+            tty(3,0,tcrToTime($day['min']).' ');
+            tty(3,0,tcrToTime($day['max']).' ');
+        }
         if (!$compact) tty(2,0, fixLen($day['int'],2));
         tty(1,0,'│');
         echo $day['str'];
@@ -190,7 +199,7 @@ function outDaily($data) {
     if ($SETTINGS['hr']) hr();
 }
 
-function outDailyHeader($doHeat, $doOvr, $strLen, $first, $compact, $isPlugin) {
+function outDailyHeader($doHeat, $doOvr, $strLen, $first, $compact, $isPlugin, $noH) {
 
     $char = $first ? '┬' : '│';
 
@@ -199,9 +208,12 @@ function outDailyHeader($doHeat, $doOvr, $strLen, $first, $compact, $isPlugin) {
     tty(0,7,'F');
     echo  ' ' ;
     tty(0,7, 'C');
-    echo  ' ' ;
-    tty(0,7,'Dalle ');
-    tty(0,7,'Alle  ');
+    if (!$noH) {
+        echo  ' ' ;
+        tty(0,7,'Min H.');
+        tty(0,7,'Max H.');
+    }
+
     if (!$compact) tty(0,7, fixLen('I',2));
     tty(1,0,$char);
     tty(0,7,fixLen('Tabella Oraria',$strLen));
@@ -1024,6 +1036,8 @@ function outProjMerge($prog, $tag, $oper, $col) {
 }
 
 function outProjectsTable($list, $selected = null) {
+
+    initEvidenzia();
 
     tty(15,0,'Tabella progetti:');
     echo "\n\n";

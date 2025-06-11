@@ -289,6 +289,10 @@ function dispatch() {
         if (!$SETTINGS['direct']) $text = mb_convert_encoding($text,$SETTINGS['encoding'],'UTF-8');
     }
 
+    if (isset($SETTINGS['evid']) and @$SETTINGS['colors']) {
+        $text = str_replace($SETTINGS['evid'],ttyS(1,14,$SETTINGS['evid']),$text);
+    }
+
     $x = pluginCall('onDispatch',false,$text);
     if ($x !== null) $text = $x;
     echo $text;

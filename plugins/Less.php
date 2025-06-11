@@ -107,7 +107,7 @@ class Less
         echo "\033[?3h";
         echo "\033[132$|";
         echo "\033[44*|";
-        
+
         readline_callback_handler_install('', function () {});
 
         echo "\033[?25l";

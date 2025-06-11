@@ -18,7 +18,7 @@ function initProc() {
         'dal:','al:','salva:','per:','noe','map','mappa','mapnum','mesi','colori','mono','hr',
         'ascii','dati','pr:','G2','head','scr','crw:','nomi','plugin:','132','pro:',
         'palette','tutti','aggiungi:','rimuovi:','tabella','simbolo:','titolo:','compatto',
-        'gruppo:','help:','tipo:','simboli','mostra','132x44','max']
+        'gruppo:','help:','tipo:','simboli','mostra','132x44','max','no-ore','evidenzia:']
     ;
 
     $canArray = [ 'crw','plugin','pro','P','L','gruppo' ];
@@ -555,6 +555,12 @@ function initProc() {
 
     pluginCall('onStart',true);
 
+}
+
+function initEvidenzia() {
+    global $SETTINGS;
+    global $OPT;
+    if (isset($OPT['evidenzia'])) $SETTINGS['evid'] = $OPT['evidenzia'];
 }
 
 function parseConfigFiles($array) {

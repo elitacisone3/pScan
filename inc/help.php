@@ -73,7 +73,7 @@ function getSelfName() {
 }
 
 function doHelpCapPlugin() {
-
+    initEvidenzia();
     loadAllPlugins();
 
     $list = getPlugins();
@@ -140,6 +140,7 @@ function doHelp() {
     global $SETTINGS;
 
     loadAllPlugins();
+    initEvidenzia();
 
     $syntaxToken = [];
     $paramMap = [];
@@ -182,7 +183,7 @@ function doHelp() {
 ~    [ --scr ] [ --per <peridodo> ] [ --noe ] [ -q ] [ --nomi ]
 ~    [ --crw <path> ] ... [ { --map | --mapnum } ] [ --simboli ]
 ~    [ --palette ] [ --tutti ] [ --lista ] [ --head ] [ --mappa ]
-~    [ --compatto ] [ -Q ] [ -v ] [ --mostra ] [ --dati ] 
+~    [ --compatto ] [ -Q ] [ -v ] [ --mostra ] [ --dati ] [ --no-ore ]
 ~    [ { --132 | --132x44 | --max  } ] [ --help [ <capitolo> ] ]
 %%SYNTAX%%
 
@@ -191,7 +192,7 @@ function doHelp() {
 
 ~    Visualizza la guida completa:
 
-~ %%ME%% --help [ <capitolo> ]
+~ %%ME%% --help [ <capitolo> ] [ --evidenzia <testo> ]
 
 ~   Visualizza i plugin disponibili:
 
@@ -200,8 +201,9 @@ function doHelp() {
 ~    Opzioni:
     
     --help      ~Visualizza la guida completa o capitoli della guida.
+    --evidenzia ~Evidenzia un testo nelle guide.\\n(Può essere utile per cercare parametri o nei testi delle\\nguide, per ottenere un risultato più visibile).
     --mostra    ~Mostra solo la lista delle directory dei progetti.
-    --simboli   ~Forza l'uso dei simboli nella modalità --mappa --nomi --compatto.
+    --simboli   ~Forza l'uso dei simboli nella modalità:\\n--mappa --nomi --compatto.
     -p      	~Specifica il progetto da analizzare.
     -q          ~Toglie la presentazione.
     -P          ~Specifica più progetti.\\n(usa più volte l'opzione).
@@ -231,6 +233,7 @@ function doHelp() {
     --palette   ~Visualizza la tavolozza dei colori ed esce.\\n(Visualizza anche la tabella codici colore per\\ncreare i simboli colorati).
     --mappa     ~Visualizza la classifica dei progetti a destra.
     --compatto  ~Mostra meno dati e rende più compatto il grafico.\\n(Crea più spazio per i nomi a destra).
+    --no-ore    ~Toglie le colonne "Min H." e "Max H." a sinistra nella tabella\\ngiornaliero.
     -T          ~Visualizza solo le tabelle.
     -D		    ~Usa i puntini anzichè il numero del giorno/ore\\n(Se usato con --map inverte l'impostazione).
     -H		    ~Visualizza la mappa di calore nel modo giorni.
@@ -427,6 +430,8 @@ function helpPalette() {
     global $TTY_PALETTE;
     global $SYMBOLS;
 
+    initEvidenzia();
+
     if (!$SYMBOLS) initSymbols();
 
     if (!$SETTINGS['colors']) {
@@ -548,6 +553,9 @@ function helpPaletteSection($palette, $pad) {
 
 function doHelpFile($name) {
     global $SETTINGS;
+
+    initEvidenzia();
+
     $try = [];
 
     if ($name == 'opzioni') doHelp(); // quit
