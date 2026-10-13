@@ -82,7 +82,7 @@ function outDaily($data) {
                     tty(8,0,' --');
 
                     if ($noH) {
-                        tty(7,0, " \x01 ");
+                        tty(7,0, " \x01");  // XXX Fixato spazio in più
                     } else {
                         tty(7,0, " \x01 ..:.. ..:.. ");
                     }
@@ -948,6 +948,7 @@ function outLegend($data) {
 
 function getProjectsByList($curList) {
     global $CONF;
+    global $OPT;
 
     $out = [];
 
@@ -977,6 +978,23 @@ function getProjectsByList($curList) {
                 $nameId.='/'.strtoupper(base_convert($ovrCount,10,36));
             }
             $isGen = true;
+        }
+
+        if (
+            isset($OPT['non-sovrapporre']) and
+            isset($out[$nameId]) and
+            $out[$nameId]['path'] != $projPath
+        ) {
+
+            $tmp = "$nameId\n$projPath";
+            $tmp = crc32($tmp);
+            $tmp^= $tmp >> 1;
+            $tmp&= 0x7FFFFFFF;
+            $tmp = base_convert($tmp,10,36);
+            $tmp = strtoupper($tmp);
+            $tmp = str_pad($tmp,6,'0',STR_PAD_LEFT);
+            $nameId.="_$tmp";
+
         }
 
         if (isset($out[$nameId])) {
@@ -1019,6 +1037,10 @@ function getProjectsByList($curList) {
         } else {
             $out[$nameId]['char'] = createProjectSymbolByName($nameId);
         }
+
+        // Rappresentazione grezza (carattere+colore, indipendente da --mono/--colori),
+        // così un --load-dump può ricostruire $SYMBOLS['list'] senza decodificare l'ANSI.
+        $out[$nameId]['charSource'] = getProjectSymbolSource($nameId);
 
     }
 
@@ -1433,10 +1455,9 @@ function outPres() {
     echo "\n";
     tty(14,0,PROG_NAME .' ');
     tty(7,0,"ver ");
-    tty(10,0,"2.0");
-    tty(3,0,"B");
+    tty(10,0,PROG_VERSION);
     echo "\n ";
-    tty(11,0,"(C) 2007-2025 by EPTO");
+    tty(11,0,"(C) 2007-" . date('Y') . " by EPTO");
     echo "\n ";
     tty(15,0,"Tutti i diritti sono miei e me li tengo!");
     echo "\n";

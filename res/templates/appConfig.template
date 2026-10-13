@@ -1,0 +1,19 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Configurazione per --build-app
+;
+; File ini separato dalla configurazione principale (config.conf), passato con:
+;   pScan --build-app <directory> --app-config <questo-file>
+;
+; Stessa sintassi ini standard usata altrove nel progetto (sezioni [nome],
+; chiave = valore, commenti con ";").
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[page]
+
+; title		= "Attività progetti"	; Titolo della pagina (tag <title> e <h1>).
+; description	= "Dati generati da pScan"	; Sottotitolo mostrato sotto il titolo.
+; theme		= auto			; Tema: auto (segue il sistema) | light | dark.
+; htaccess	= true			; Genera un file .htaccess nella directory di output.
+
+; --app-title e --app-desc sulla riga di comando hanno la precedenza su
+; title/description definiti qui.

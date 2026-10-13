@@ -1,0 +1,327 @@
+:root {
+  --surface-1: #fcfcfb;
+  --surface-2: #f3f2ee;
+  --text-primary: #1a1a19;
+  --text-secondary: #4b4b48;
+  --muted: #7a7a76;
+  --border: #e1e0d9;
+  --gridline: #e1e0d9;
+  --series-d: #2a78d6;
+  --series-f: #e34948;
+  --series-n: #4a3aa7;
+  --series-p: #1baf7a;
+  --ink: #4b4b48;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface-1: #1a1a19;
+    --surface-2: #232322;
+    --text-primary: #f3f2ee;
+    --text-secondary: #c8c7c0;
+    --muted: #9a9a94;
+    --border: #2c2c2a;
+    --gridline: #2c2c2a;
+    --series-d: #3987e5;
+    --series-f: #e66767;
+    --series-n: #9085e9;
+    --series-p: #199e70;
+    --ink: #c8c7c0;
+  }
+}
+/* Tema esplicito (via --app-config page.theme), vince sempre sulla preferenza del sistema */
+:root[data-theme="dark"] {
+  --surface-1: #1a1a19;
+  --surface-2: #232322;
+  --text-primary: #f3f2ee;
+  --text-secondary: #c8c7c0;
+  --muted: #9a9a94;
+  --border: #2c2c2a;
+  --gridline: #2c2c2a;
+  --series-d: #3987e5;
+  --series-f: #e66767;
+  --series-n: #9085e9;
+  --series-p: #199e70;
+  --ink: #c8c7c0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+.page {
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+h1 {
+  font-size: 1.5rem;
+  margin: 0 0 4px;
+}
+.subtitle {
+  color: var(--muted);
+  margin: 0 0 24px;
+  font-size: 0.9rem;
+}
+
+#loadError {
+  display: none;
+  color: var(--text-secondary);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.panel {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.panel h2 {
+  font-size: 1rem;
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+.options-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+.options-row:last-child { margin-bottom: 0; }
+.options-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+}
+.options-row input[type="date"],
+.options-row input[type="number"],
+.options-row select {
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+}
+.options-row input[type="number"] { width: 64px; }
+.hint {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+.options-row button {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+.options-row button:hover { background: var(--border); }
+.options-label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.project-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.project-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 10px 4px 6px;
+  cursor: pointer;
+}
+.project-swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.tab-btn:hover { color: var(--text-primary); }
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--series-d);
+  font-weight: 600;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+.chart-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+.chart-card h2 {
+  font-size: 1rem;
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+.echart { width: 100%; height: 440px; }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+.stats-charts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+@media (min-width: 900px) {
+  .stats-charts { grid-template-columns: 1fr 1fr; }
+}
+.stats-charts .chart-card {
+  background: var(--surface-1);
+  margin-bottom: 0;
+}
+.stats-charts .echart { height: 320px; }
+.stat-tile {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.stat-tile .label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 6px;
+}
+.stat-tile .value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.stat-tile .detail {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+.totali-options { justify-content: center; }
+.totali-pie-wrap {
+  display: flex;
+  justify-content: center;
+}
+.totali-pie {
+  width: 100%;
+  max-width: 720px;
+  height: 560px;
+}
+.totali-table-wrap { min-width: 0; margin-top: 20px; }
+.totali-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.totali-table th, .totali-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.totali-table th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.totali-table td:first-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.term-symbol {
+  display: inline-block;
+  width: 1.6em;
+  text-align: center;
+  font: 16px IBMVGA8, 'Cascadia Mono', Consolas, monospace;
+  border-radius: 3px;
+  padding: 1px 0;
+}
+
+@font-face {
+  font-family: 'IBMVGA8';
+  src: url(../fonts/ibm_vga8.eot);
+  src: url(../fonts/ibm_vga8.eot?#iefix) format('embedded-opentype'),
+  url(../fonts/ibm_vga8.woff2) format('woff2'),
+  url(../fonts/ibm_vga8.woff) format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Riquadro di emulazione terminale (Mensile/Giornaliero) */
+.terminal-box {
+  background: #000;
+  color: #ccc;
+  font: 16px IBMVGA8, 'Cascadia Mono', Consolas, monospace;
+  padding: 10px;
+  border-radius: 8px;
+  overflow: auto;
+  max-height: 520px;
+  white-space: pre;
+}
+.term-row {
+  white-space: pre;
+}
+.term-date-link {
+  cursor: pointer;
+  text-decoration: underline dotted;
+}
+.term-legend {
+  white-space: normal;
+}
+
+.app-footer {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+.app-footer a { color: inherit; text-decoration: none; }
+.app-footer a:hover { text-decoration: underline; }

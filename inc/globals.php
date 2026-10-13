@@ -1,5 +1,6 @@
 <?php
 const PROG_NAME = 'pScan';
+const PROG_VERSION = '3.0';
 
 $CONF = [];
 $OPT = [];

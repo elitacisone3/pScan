@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="it"<!--PSCAN_THEME_ATTR-->>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><!--PSCAN_TITLE--></title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div class="page">
+  <h1><!--PSCAN_TITLE--></h1>
+  <p class="subtitle"><!--PSCAN_DESC--></p>
+
+  <div id="loadError"></div>
+
+  <div class="panel" id="optionsPanel">
+    <h2>Opzioni dati</h2>
+    <div class="options-row">
+      <label>Dal <input type="date" id="dateFrom"></label>
+      <label>Al <input type="date" id="dateTo"></label>
+      <label>Aggregazione
+        <select id="aggregationMode">
+          <option value="weekly">Settimanale</option>
+          <option value="monthly">Mensile</option>
+        </select>
+      </label>
+      <button id="resetFilters" type="button">Reimposta</button>
+    </div>
+    <div class="options-row">
+      <span class="options-label">Fascia oraria</span>
+      <label>Dalle <input type="number" id="hourFrom" min="0" max="23" placeholder="0"></label>
+      <label>Alle <input type="number" id="hourTo" min="0" max="23" placeholder="23"></label>
+      <button id="clearHourFilter" type="button">Rimuovi filtro</button>
+    </div>
+    <p class="hint">La fascia oraria si applica a "Giornaliero" e alle Statistiche qui sotto (i dati settimanali/mensili non hanno granularità oraria).</p>
+    <div class="options-row">
+      <span class="options-label">Progetti</span>
+      <button id="selectAllProjects" type="button">Attiva tutti</button>
+      <button id="selectNoneProjects" type="button">Disattiva tutti</button>
+      <div class="project-checkboxes" id="projectCheckboxes"></div>
+    </div>
+    <div class="options-row">
+      <label><input type="checkbox" id="liveUpdate" checked> Aggiornamento in tempo reale</label>
+    </div>
+  </div>
+
+  <div class="panel" id="statsPanel">
+    <h2>Statistiche</h2>
+    <div class="stats-grid" id="statsGrid"></div>
+    <div class="stats-charts">
+      <div class="chart-card">
+        <h2>Distribuzione ore totali giornaliere</h2>
+        <p class="hint">Per ogni valore (1-24), quante volte il totale ore di una giornata ha raggiunto quel numero.</p>
+        <div class="echart" id="dayHistChart"></div>
+      </div>
+      <div class="chart-card">
+        <h2>Distribuzione per ora del giorno</h2>
+        <p class="hint">Per ogni ora (0-23), quante volte compare un progetto attivo in quella fascia.</p>
+        <div class="echart" id="hourHistChart"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="grafici" type="button">Grafici</button>
+    <button class="tab-btn" data-tab="annuale" type="button" id="tabAnnualeBtn">Annuale</button>
+    <button class="tab-btn" data-tab="mensile" type="button">Mensile</button>
+    <button class="tab-btn" data-tab="giornaliero" type="button">Giornaliero</button>
+    <button class="tab-btn" data-tab="totali" type="button">Totali</button>
+  </div>
+
+  <div class="tab-panel active" id="tab-grafici">
+    <div class="chart-card">
+      <h2>Totali per progetto</h2>
+      <p class="hint">Zoom sincronizzato con i grafici sottostanti. Clic sulla legenda o sulle caselle "Progetti" sopra per attivare/disattivare un progetto.</p>
+      <div class="echart" id="projectChart"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Andamento per categoria</h2>
+      <p class="hint">Rotella/pinch o cursore in basso per zoomare, trascina per scorrere.</p>
+      <div class="echart" id="weeklyChart"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Percentuali per categoria</h2>
+      <p class="hint">Valore delle colonne totDP/totNP/totFP/totPP, in percentuale sulla quota settimanale configurata.</p>
+      <div class="echart" id="pctChart"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-annuale">
+    <p class="hint">I dati seguono la selezione dei progetti attiva in "Opzioni dati" e la fascia oraria impostata, ma mostrano sempre tutti gli anni presenti nel dataset (non il filtro per data).</p>
+    <div class="chart-card">
+      <h2>Totale ore (per anno)</h2>
+      <div class="echart" id="yearTotalChart"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Percentuale (per anno)</h2>
+      <div class="echart" id="yearPctChart"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Picco massimo (per anno)</h2>
+      <div class="echart" id="yearPeakChart"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Media ore/giorno (per anno)</h2>
+      <div class="echart" id="yearAvgChart"></div>
+    </div>
+    <div class="chart-card">
+      <h2>Media ore/giorno festivi (per anno)</h2>
+      <div class="echart" id="yearAvgFestChart"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-mensile">
+    <div class="chart-card">
+      <h2>Mensile</h2>
+      <p class="hint">Clic su una data per passare a Giornaliero all'inizio del mese corrispondente.</p>
+      <div class="options-row">
+        <label><input type="checkbox" id="monthlyShowEmpty" checked> Mostra anche i mesi senza dati</label>
+      </div>
+      <div class="terminal-box" id="monthlyBox"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-giornaliero">
+    <div class="chart-card">
+      <h2>Giornaliero</h2>
+      <div class="options-row">
+        <label><input type="checkbox" id="dailyShowHourLabels"> Mostra suddivisioni orarie (N M P S N)</label>
+        <label><input type="checkbox" id="dailyShowEmpty" checked> Mostra anche i giorni senza dati</label>
+      </div>
+      <div class="terminal-box" id="dailyBox"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-totali">
+    <div class="chart-card">
+      <h2>Totali per progetto</h2>
+      <div class="options-row totali-options">
+        <label><input type="radio" name="pieRelativeMode" value="selection" checked> Periodo selezionato</label>
+        <label><input type="radio" name="pieRelativeMode" value="all"> Tutto il dataset</label>
+      </div>
+      <div class="totali-pie-wrap">
+        <div class="echart totali-pie" id="pieChart"></div>
+      </div>
+      <div class="totali-table-wrap">
+        <table class="totali-table" id="totaliTable">
+          <thead><tr><th>Simbolo</th><th>Progetto</th><th>Tipo</th><th>Ore</th><th>%</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer"><!--PSCAN_FOOTER--></footer>
+</div>
+
+<script src="js/vendor/echarts.min.js"></script>
+<script>window.PSCAN_DATA = <!--PSCAN_DATA_JSON-->;</script>
+<script src="js/palette.js"></script>
+<script src="js/terminal.js"></script>
+<script src="js/state.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/monthly.js"></script>
+<script src="js/daily.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

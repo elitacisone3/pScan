@@ -136,6 +136,24 @@ function getSidMap() {
     return $o;
 }
 
+function restoreProjectSymbols($added) {
+    global $SYMBOLS;
+    if (!$SYMBOLS) initSymbols();
+    if (!is_array($added)) return;
+
+    foreach ($added as $item) {
+        if (!is_array($item) or !isset($item['name']) or !isset($item['id'])) continue;
+        $SYMBOLS['id'][$item['name']] = $item['id'];
+        if (isset($item['char']) and $item['char'] !== '') {
+            $SYMBOLS['char'][$item['name']] = $item['char'];
+        }
+        if (!empty($item['charSource'])) {
+            $dec = decodeSymbol($item['charSource']);
+            if ($dec[0] !== null) $SYMBOLS['list'][$item['name']] = $dec;
+        }
+    }
+}
+
 function setProjectId($pid) {
     global $SYMBOLS;
     if (!$SYMBOLS) initSymbols();
@@ -220,6 +238,7 @@ function getProjectSymbolSource($pid) {
     global $SYMBOLS;
 
     if (!isset($SYMBOLS['char']) or !isset($SYMBOLS['char'][$pid])) return null;
+    if (!isset($SYMBOLS['list']) or !isset($SYMBOLS['list'][$pid])) return null;
     $code =  $SYMBOLS['list'][$pid];
 
     return getSymbolSource($code[0],$code[1]);

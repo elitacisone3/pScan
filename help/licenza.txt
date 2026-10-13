@@ -5,7 +5,7 @@
 <{- 1}>~
 {{E}} pScan {{1}} ( {{3}} %%ME%% {{1}} )
 ~<{L 2}>~
-{{A}} Copyright (C) 2007 - 2025 by EPTO {{7}}
+{{A}} Copyright (C) 2007 - 2026 by EPTO {{7}}
 
 This is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later
 version.
@@ -18,6 +18,8 @@ Temple Place, Suite 330, Boston, MA  02111-1307  USA
 <{- 1}>~
 <{C 7 E}>~
 {{F}} Changelog: {{7}}
+<{M 4 2 *}>{{3}} Ver {{A}} 3.0 {{7}} by {{F}} EPTO {{7}}
+Aggiunti --save-dump e --load-dump per condividere una scansione grezza senza bisogno dei progetti originali, --out-simple per l'aggregazione settimanale, --build-app per generare una applicazione web statica con grafici e viste a terminale, --app-config, --app-title e --app-desc per personalizzarla, --fuso-orario per correggere vecchie scansioni con un fuso orario errato. Corretto un bug storico nel calcolo degli intervalli che escludeva sempre l'ora 23 dalle statistiche.
 <{M 4 2 *}>{{3}} Ver {{A}} 2.0 {{3}} B {{7}} (C) 28/05/2025 03:30 by {{F}} EPTO {{7}}
 Completamento versione attuale con inserimento dei plugin di default.
 <{/}>

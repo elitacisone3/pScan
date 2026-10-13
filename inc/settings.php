@@ -15,8 +15,8 @@ function initProc() {
     $doHelp = false;
 
     $OPT = [
-        'dal:','al:','salva:','per:','noe','map','mappa','mapnum','mesi','colori','mono','hr',
-        'ascii','dati','pr:','G2','head','scr','crw:','nomi','plugin:','132','pro:',
+        'dal:','al:','salva:','save-dump:','load-dump:','per:','noe','map','mappa','mapnum','mesi','colori','mono','hr','out:','out-pad','out-simple:','build-app:','app-config:','app-title:','app-desc:','fuso-orario:',
+        'ascii','dati','pr:','G2','head','scr','crw:','nomi','plugin:','132','pro:','non-sovrapporre',
         'palette','tutti','aggiungi:','rimuovi:','tabella','simbolo:','titolo:','compatto',
         'gruppo:','help:','tipo:','simboli','mostra','132x44','max','no-ore','evidenzia:']
     ;
@@ -167,6 +167,54 @@ function initProc() {
         }
 
     }
+
+    if (isset($OPT['load-dump'])) {
+
+        $file = $OPT['load-dump'];
+        if (!file_exists($file)) quit("File dump non trovato: $file");
+
+        $raw = file_get_contents($file);
+        if ($raw === false) quit("Errore lettura file dump: $file");
+
+        if (pathinfo($file,PATHINFO_EXTENSION) == 'gz') {
+            $raw = @gzdecode($raw);
+            if ($raw === false) quit("Errore decompressione file dump: $file");
+        }
+
+        $dump = json_decode($raw,true);
+
+        if (
+            !is_array($dump) or
+            !isset($dump['data']) or !is_array($dump['data']) or
+            !isset($dump['opt']) or !is_array($dump['opt'])
+        ) {
+            quit("File dump non valido o corrotto: $file");
+        }
+
+        // Le opzioni di selezione progetto (dove scansionare) non vanno mai riproposte:
+        // --load-dump serve apposta a funzionare senza i progetti/la config in locale,
+        // e riproporle farebbe ripartire la ricerca/espansione (es. --tutti/--pro
+        // richiedono projectsNameMap) su una macchina che non li ha configurati.
+        $noReplayOpt = ['p','P','L','crw','pro','gruppo','tutti'];
+
+        foreach ($dump['opt'] as $k => $v) {
+            if (in_array($k,$noReplayOpt)) continue;
+            if (!isset($OPT[$k])) $OPT[$k] = $v;
+        }
+
+        if (!empty($dump['plugins']) and is_array($dump['plugins'])) {
+            $existingPlugins = [];
+            if (isset($OPT['plugin'])) {
+                $existingPlugins = is_array($OPT['plugin']) ? $OPT['plugin'] : [$OPT['plugin']];
+            }
+            $OPT['plugin'] = array_values(array_unique(array_merge($existingPlugins, $dump['plugins'])));
+        }
+
+        $SETTINGS['loadDumpData'] = $dump['data'];
+
+    }
+
+    $SETTINGS['rawOptSnapshot'] = $OPT;
 
     if (isset($OPT['mapnum'])) $OPT['map'] = false;
 
@@ -412,6 +460,8 @@ function initProc() {
     clearPlugins();
     loadAllTypes();
 
+    $SETTINGS['activeExtraPlugins'] = [];
+
     $list = getConfig('main.plugin',[]);
 
     if ($list) {
@@ -420,6 +470,7 @@ function initProc() {
 
         foreach ($list as $key => $item) {
             addPlugin($item,"main.plugin.$key",true);
+            $SETTINGS['activeExtraPlugins'][] = $item;
         }
 
     }
@@ -431,11 +482,14 @@ function initProc() {
         foreach ($SETTINGS['plugins'] as $item) {
 
             if (!isPluginLoaded($item)) addPlugin($item);
+            $SETTINGS['activeExtraPlugins'][] = $item;
         }
 
         unset($SETTINGS['plugins']);
 
     }
+
+    $SETTINGS['activeExtraPlugins'] = array_values(array_unique($SETTINGS['activeExtraPlugins']));
 
     initPlugins();
     finalizeTypes();
@@ -533,6 +587,15 @@ function initProc() {
                 break;
             }
         }
+    }
+
+    if (isset($OPT['fuso-orario'])) {
+        if (!preg_match('/^-?[0-9]+$/',trim($OPT['fuso-orario']))) {
+            quit("Valore non valido per --fuso-orario: deve essere un numero intero (es. -1, 2)");
+        }
+        $SETTINGS['tzOffsetHours'] = intval($OPT['fuso-orario']);
+    } else {
+        $SETTINGS['tzOffsetHours'] = 0;
     }
 
     pluginCall('onInitDone',true);
@@ -710,47 +773,7 @@ function getConfig($path,$default) {
         }
     }
 
-    if (is_bool($default)) {
-
-        if (is_bool($cur)) return $cur;
-
-        if (is_numeric($cur)) {
-            if ($cur == 0) return false;
-            if ($cur == 1) return true;
-        }
-
-    } elseif (is_string($default)) {
-
-        if (is_scalar($cur) and !is_bool($cur)) return "$cur";
-
-    } else {
-
-        if (
-            is_scalar($cur) and !is_bool($cur) and
-            is_numeric($cur) and !is_infinite($cur) and
-            !is_nan($cur)
-        ) {
-
-            if (is_int($default)) return intval($cur);
-            if (is_float($default)) return floatval($cur);
-            quit("Errore nel valore di default",$path);
-
-        }
-
-    }
-
-    if (is_bool($cur)) {
-        $cur = $cur ? '[true]':'[false]';
-    } elseif (is_array($cur)) {
-        $cur = '[Array]';
-    } elseif (is_null($cur)) {
-        $cur = '[null]';
-    } elseif (!is_scalar($cur)) {
-        $cur = '['.gettype($cur).']';
-    }
-
-    quit("Tipo di valore errato: $cur", $path);
-    exit(1); // Gia fatto!
+    return resolveConfigValue($cur, $default, $path);
 }
 
 function saveSubConfig($sectionNames, $file, $extraText = null) {

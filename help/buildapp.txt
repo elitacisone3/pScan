@@ -1,0 +1,34 @@
+<{title Generare una applicazione web con --build-app}>~
+<{desc Crea una pagina statica con grafici e tabelle, consultabile anche senza PHP}>~
+<{data pri 9500}>~
+<{head 80 7}>~
+<{C 7 A}>~
+{{F}} Generare una applicazione web: {{7}}
+
+<{L 2}>{{F}} L'opzione {{A}} --build-app <dir> {{7}} crea, nella directory indicata, una single page application statica (HTML, CSS, JavaScript) con i dati incorporati. La pagina si apre dal file index.html, anche offline, senza bisogno di PHP ne delle directory dei progetti originali: basta copiare la cartella generata su un server web qualsiasi, oppure aprirla direttamente dal filesystem.
+
+<{L 2}>{{F}} Esempio minimo:
+<{L 4}>{{3}} %%ME%% {{A}} --tutti --build-app <dir>
+
+<{L 2}>{{F}} Uso tipico, pensato per condividere i dati con chi non ha accesso ai progetti originali. Prima si salva una scansione grezza con {{A}} --save-dump, {{7}} poi la si ricarica altrove e si genera l'applicazione usando insieme {{A}} --load-dump {{7}} e {{A}} --build-app.
+<{L 4}>{{3}} %%ME%% {{A}} --tutti --save-dump <file.json>
+<{L 4}>{{3}} %%ME%% {{A}} --load-dump <file.json> --build-app <dir>
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{F}} Personalizzazione: {{7}}
+<{M 4 2 *}>{{A}} --app-title <titolo>: {{7}} imposta il titolo della pagina.
+<{M 4 2 *}>{{A}} --app-desc <descrizione>: {{7}} imposta il sottotitolo mostrato sotto il titolo.
+<{M 4 2 *}>{{A}} --app-config <file>: {{7}} carica un file ini con le stesse impostazioni, titolo, descrizione, tema chiaro o scuro, generazione del file .htaccess, utile per automatizzare generazioni ripetute. I parametri sulla riga di comando hanno sempre la precedenza sul file di configurazione. Un modello commentato si trova in res/templates/appConfig.template.
+<{M 4 2 *}>{{A}} --fuso-orario <ore>: {{7}} sposta la lettura di tutti gli orari in avanti o indietro di un numero intero di ore, prima che i dati vengano elaborati. Utile per correggere vecchie scansioni registrate con un fuso orario errato.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{F}} Contenuto della pagina generata: {{7}}
+<{M 4 2 *}>{{F}} Grafici: {{7}} andamento settimanale o mensile per categoria e per progetto, con zoom sincronizzato tra i grafici.
+<{M 4 2 *}>{{F}} Annuale: {{7}} presente solo se i dati coprono piu' di un anno, mostra le statistiche principali suddivise per anno.
+<{M 4 2 *}>{{F}} Mensile e Giornaliero: {{7}} le stesse viste a terminale di %%ME%%, renderizzate nel browser.
+<{M 4 2 *}>{{F}} Totali: {{7}} distribuzione delle ore per progetto, con tabella e grafico a torta.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{F}} Sicurezza della directory di destinazione: {{7}}
+{{7}} Se la directory indicata non e' vuota, %%ME%% rigenera il contenuto solo se trova un file .dirType creato da un precedente --build-app. In caso contrario l'operazione viene annullata senza toccare nulla, per evitare di sovrascrivere per errore una directory non pertinente.
+<{/}>

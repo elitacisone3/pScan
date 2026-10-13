@@ -1,0 +1,38 @@
+<{title Creare un plugin}>~
+<{desc Come estendere %%ME%% con nuovi tipi di progetto o nuove funzionalita}>~
+<{data pri 800}>~
+<{head 80 7}>~
+<{C 7 A}>~
+{{F}} Creare un plugin: {{7}}
+
+<{L 2}>{{F}} Esistono due categorie di plugin, entrambe semplici classi PHP nel namespace {{A}} pScan\plugins.
+<{M 4 2 *}>{{F}} Tipo di progetto: {{7}} riconosce ed elabora le directory di un IDE, come PHPStorm o Android Studio. Estende la classe {{A}} _ProjectType {{7}} e implementa almeno {{A}} getProjectType($path) {{7}} e {{A}} parseDirectory($dir, $projectData).
+<{M 4 2 *}>{{F}} Plugin a eventi: {{7}} aggiunge un comportamento senza rappresentare un tipo di progetto, ad esempio un formato di salvataggio o una colonna extra nei report. Implementa uno o piu' metodi pubblici che corrispondono agli eventi lanciati internamente da %%ME%%, senza bisogno di registrarsi esplicitamente: basta implementare il metodo che serve.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{F}} Dove inserirlo: {{7}}
+<{M 4 2 *}>{{F}} directory {{A}} default/: {{7}} plugin caricati sempre, in automatico. Qui si trovano i tipi di progetto principali, come PHPStorm e AndroidStudio.
+<{M 4 2 *}>{{F}} directory {{A}} plugins/: {{7}} plugin opzionali, da attivare esplicitamente con {{A}} --plugin <nome> {{7}} sulla riga di comando, oppure aggiungendo il nome alla voce {{A}} main.plugin {{7}} della configurazione.
+<{M 4 2 *}>{{F}} Nome file e classe: {{7}} il nome del file, senza estensione, deve coincidere con il nome della classe, con la lettera iniziale maiuscola. {{A}} plugins/MioPlugin.php {{7}} deve contenere la classe {{A}} MioPlugin.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{F}} Metodi di un plugin di tipo progetto: {{7}}
+<{M 4 2 *}>{{A}} getTypeName(): {{7}} il nome visualizzato nei report.
+<{M 4 2 *}>{{A}} getTypeSymbolSource(): {{7}} il simbolo e i colori di default per questo tipo, nello stesso formato usato da --simbolo.
+<{M 4 2 *}>{{A}} getPluginMetadata(): {{7}} un array con la chiave {{A}} desc, {{7}} la descrizione mostrata da --help plugin.
+<{M 4 2 *}>{{A}} getProjectType($path): {{7}} ritorna {{A}} get_class($this) {{7}} se la directory appartiene a questo tipo, altrimenti {{A}} null.
+<{M 4 2 *}>{{A}} parseDirectory($dir, $projectData): {{7}} legge la directory e ritorna un array con gli intervalli di lavoro trovati, nello stesso formato prodotto dai plugin esistenti.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{F}} Alcuni eventi utili per i plugin a eventi: {{7}}
+<{M 4 2 *}>{{A}} onStart, onBeforeStart, onInitDone: {{7}} lanciati all'avvio del programma.
+<{M 4 2 *}>{{A}} parseInterval(&$interval, &$cox): {{7}} puo' modificare un intervallo grezzo prima che venga attribuito a giorno e ora.
+<{M 4 2 *}>{{A}} calcDay, calcAllDays, getAllData: {{7}} lanciati dopo l'elaborazione dei dati giornalieri o completi.
+<{M 4 2 *}>{{A}} onSaveDump, saveDumpHook, onSaveSimple, saveSimpleHook: {{7}} durante il salvataggio con --save-dump e --out-simple.
+<{M 4 2 *}>{{A}} outDayLine, outMonthLine, outSummary, outLegend: {{7}} durante la stampa a terminale, per aggiungere colonne o righe personalizzate.
+<{M 4 2 *}>{{A}} getHelpSyntaxToken(), getHelpParamMap(): {{7}} per dichiarare nuovi parametri a riga di comando propri del plugin e farli comparire nella guida.
+<{/}>
+<{C 7 A}>~
+<{L 2}>{{7}} Per un esempio completo e funzionante, consulta i file {{A}} plugins/ProjectData.php, {{7}} un tipo di progetto minimale che importa dati da un file JSON, e {{A}} plugins/PCCheck.php, {{7}} un tipo di progetto che dichiara anche un proprio parametro a riga di comando.
+<{/}>
+

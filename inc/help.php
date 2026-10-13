@@ -179,7 +179,10 @@ function doHelp() {
 ~    [ { --mesi [ --h ] [ -X ] | [ -H ] [ -o ] [ -N ] } ] [ -O ] [ -T ] 
 ~    { [ --h0 ] [ --h1 ] [ --h2 ] [ --h3 ] [ --h4 ] | [ --H0 <num> ] 
 ~    [ --H1 <num> ] [ --H2 <num> ] [ --H3 <num> ] [ --H4 <num> ] } 
-~    [ --salva <file> ] [ --ascii ] [ --G2 ] [ --pr <profilo> ] 
+~    [ --salva <file> ] [ --save-dump <file> ] [ --load-dump <file> ]
+~    [ --out-simple <file> ] [ --build-app <dir> ] [ --app-config <file> ]
+~    [ --app-title <titolo> ] [ --app-desc <descrizione> ] [ --fuso-orario <ore> ]
+~    [ --ascii ] [ --G2 ] [ --pr <profilo> ]
 ~    [ --scr ] [ --per <peridodo> ] [ --noe ] [ -q ] [ --nomi ]
 ~    [ --crw <path> ] ... [ { --map | --mapnum } ] [ --simboli ]
 ~    [ --palette ] [ --tutti ] [ --lista ] [ --head ] [ --mappa ]
@@ -187,7 +190,7 @@ function doHelp() {
 ~    [ { --132 | --132x44 | --max  } ] [ --help [ <capitolo> ] ]
 %%SYNTAX%%
 
-~    Analizza uno o più progetti di varie IDE e ne visualizza le statistiche.
+~    Analizza uno o più progetti di varie IDE e ne visualizza le statistiche, con la possibilità di generare anche una applicazione web con i dati (--build-app).
 .10
 
 ~    Visualizza la guida completa:
@@ -215,6 +218,14 @@ function doHelp() {
     --noe       ~Codifica l'output in UTF-8.
     --crw       ~Scannerizza una o più directory cercando progetti.\\n(Usabile più volte).
     --salva     ~Salva i dati in json o json.gz
+    --save-dump ~Salva su file (json o json.gz) la scansione grezza, non ancora\\nelaborata, insieme ai parametri usati.\\n(Utile per inviare una scansione a chi non ha i progetti in locale).
+    --load-dump ~Ricarica un file creato con --save-dump e riprende l'elaborazione\\ncome se la scansione fosse appena stata eseguita, senza bisogno\\ndelle directory dei progetti originali.\\n(I parametri passati su questa riga di comando hanno la precedenza\\nsu quelli salvati nel dump).
+    --out-simple ~Salva un file (json o csv) con l'aggregazione settimanale per\\ncategoria (Totale/Notte/Festivi/Pomeridiani), con le relative\\npercentuali sulle quote configurabili nella sezione [weekly].\\n(Funziona in autonomia, non richiede --out).
+    --build-app ~Genera, nella directory indicata (creata se assente), una\\nsingle page application statica con grafici e viste terminale\\ndei dati, utilizzabile anche senza PHP né i progetti originali.\\n(La directory è trattata come una wwwroot indipendente,\\nspostabile ovunque; se non vuota deve contenere un file\\n.dirType generato da un --build-app precedente, altrimenti\\nl'operazione viene annullata senza toccarla).
+    --app-config ~Carica un file ini con le impostazioni di produzione per\\n--build-app (titolo pagina, tema chiaro/scuro, generazione\\ndi .htaccess). Valido solo insieme a --build-app.
+    --app-title ~Imposta il titolo della pagina generata da --build-app.\\n(Ha la precedenza su page.title in --app-config). Valido solo\\ninsieme a --build-app.
+    --app-desc  ~Imposta la descrizione (sottotitolo) della pagina generata da\\n--build-app. (Ha la precedenza su page.description in\\n--app-config). Valido solo insieme a --build-app.
+    --fuso-orario ~Sposta la lettura di tutti gli orari in avanti (numero positivo)\\no indietro (numero negativo) del numero di ore indicato.\\nUtile per compensare vecchi progetti scansionati con un fuso\\norario errato (si applica globalmente, a tutti i progetti).
     --colori	~Crea il report a colori.
     --ascii     ~Usa solo caratteri ASCII.
     --mono		~Crea il report senza colori.
@@ -345,12 +356,12 @@ HELP;
             } else {
 
                 echo '    ';
-                tty(10,0,fixLen($tok[0],12));
+                tty(10,0,fixLen($tok[0],14));
                 $subText = str_replace("\\n","\n",$tok[1]);
                 $subText = trim($subText);
                 $subText = explode("\n",$subText);
                 foreach ($subText as $sPtr => $subLine) {
-                    if ($sPtr > 0) echo str_repeat(' ',16);
+                    if ($sPtr > 0) echo str_repeat(' ',18);
                     tty(7,0,$subLine);
                     echo "\n";
                 }

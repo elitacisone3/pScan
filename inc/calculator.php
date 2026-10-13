@@ -28,6 +28,12 @@ function parseInterval(&$dayArray, &$cox, $interval) {
         return;
     }
 
+    // --fuso-orario: sposta globalmente la lettura dell'orario, per compensare
+    // vecchi progetti registrati con un fuso orario errato.
+    if (!empty($SETTINGS['tzOffsetHours'])) {
+        $interval['start'] += $SETTINGS['tzOffsetHours'] * 3600;
+    }
+
     $dayId = floor($interval['start'] / 86400);
     $dayTime = $dayId * 86400;
     $tcrStart = intval(($interval['start'] - $dayTime) / 3600);
@@ -36,10 +42,12 @@ function parseInterval(&$dayArray, &$cox, $interval) {
     $minStart = intval(($interval['start'] - $dayTime) / 60);
     $minEnd = $minStart + intval($interval['len'] / 60);
 
-    if ($tcrEnd == 24) $tcrEnd = 23;
+    // $tcr< $tcrEnd (limite esclusivo) nei cicli sotto: va troncato a 24, non 23,
+    // altrimenti l'ora 23 non è mai raggiungibile da nessun intervallo (bug storico).
+    if ($tcrEnd > 24) $tcrEnd = 24;
     if ($minEnd == 1440) $minEnd = 1439;
 
-    if ($tcrEnd > 23 or $minEnd > 1440) {
+    if ($tcrEnd > 24 or $minEnd > 1440) {
         tty(5,0,'Attenzione: ');
         tty(4,0,"Intervallo troppo lungo: $tcrEnd , $minEnd");
         echo "\n\n";
@@ -336,7 +344,17 @@ function getAllData() {
     global $SETTINGS;
     global $OPT;
 
-    if (isset($SETTINGS['projList'])) {
+    if (isset($SETTINGS['loadDumpData'])) {
+
+        $data = $SETTINGS['loadDumpData'];
+        unset($SETTINGS['loadDumpData']);
+
+        if (!empty($data['added'])) {
+            $SETTINGS['projArray'] = $data['added'];
+            restoreProjectSymbols($data['added']);
+        }
+
+    } elseif (isset($SETTINGS['projList'])) {
 
         pluginCall('initProjectList',true,$SETTINGS['projList']);
 
@@ -354,6 +372,40 @@ function getAllData() {
     } else {
 
         $data = getIntervalsFrom($SETTINGS['project'],[]);
+
+    }
+
+    if (isset($OPT['save-dump'])) {
+
+        $dumpData = $data;
+        $dumpOpt = isset($SETTINGS['rawOptSnapshot']) ? $SETTINGS['rawOptSnapshot'] : $OPT;
+        unset($dumpOpt['save-dump']);
+        unset($dumpOpt['load-dump']);
+
+        // Plugin extra effettivamente attivi per questa scansione (CLI --plugin
+        // o config.conf [main]plugin[]), così --load-dump può ricaricarli e risolvere
+        // correttamente tipi/simboli anche se non sono configurati sulla macchina di replay.
+        $dumpPlugins = $SETTINGS['activeExtraPlugins'] ?? [];
+
+        pluginFixArray($dumpData,'onSaveDump',true,$dumpData,$OPT['save-dump']);
+
+        if (!pluginCall('saveDumpHook',true,$dumpData,$OPT['save-dump'])) {
+
+            $dump = [
+                'meta'  =>  [
+                    'savedAt'   =>  date('c'),
+                    'tool'      =>  PROG_NAME,
+                ],
+                'data'      =>  $dumpData,
+                'opt'       =>  $dumpOpt,
+                'plugins'   =>  $dumpPlugins
+            ];
+
+            $raw = json_encode($dump,JSON_PRETTY_PRINT);
+            if (pathinfo($OPT['save-dump'],PATHINFO_EXTENSION) == 'gz') $raw = gzencode($raw);
+            file_put_contents($OPT['save-dump'],$raw);
+
+        }
 
     }
 
@@ -387,6 +439,9 @@ function getAllData() {
     foreach ($keys as $key) {
         if (isset($data[$key])) $extra[$key] = $data[$key];
     }
+
+    $projectWeeklyStats = computeProjectWeeklyStats($data['data']);
+
     $data = calcAllDays($days, $cox);
 
     $maxH = ceil($data['hSum']);
@@ -400,6 +455,9 @@ function getAllData() {
     foreach ($extra as $k => $v) {
         if (!isset($data[$k])) $data[$k] = $v;
     }
+
+    $data['projectWeekly'] = $projectWeeklyStats;
+    $data['projectsExport'] = buildProjectsExport($data['added'] ?? []);
 
     pluginFixArray($data,'getAllData',true,$data);
 

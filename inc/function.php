@@ -353,3 +353,83 @@ function tagParser($text, $tagOpen='<{', $tagClose='}>') {
     return $o;
 
 }
+
+function resolveConfigValue($cur, $default, $path) {
+
+    if (is_bool($default)) {
+
+        if (is_bool($cur)) return $cur;
+
+        // parse_ini_file() converte la parola "false" in stringa vuota, non in booleano.
+        if ($cur === '') return false;
+
+        if (is_numeric($cur)) {
+            if ($cur == 0) return false;
+            if ($cur == 1) return true;
+        }
+
+    } elseif (is_string($default)) {
+
+        if (is_scalar($cur) and !is_bool($cur)) return "$cur";
+
+    } elseif (is_array($default)) {
+
+        if (is_array($cur)) return $cur;
+
+    } else {
+
+        if (
+            is_scalar($cur) and !is_bool($cur) and
+            is_numeric($cur) and !is_infinite($cur) and
+            !is_nan($cur)
+        ) {
+
+            if (is_int($default)) return intval($cur);
+            if (is_float($default)) return floatval($cur);
+            quit("Errore nel valore di default",$path);
+
+        }
+
+    }
+
+    if (is_bool($cur)) {
+        $cur = $cur ? '[true]':'[false]';
+    } elseif (is_array($cur)) {
+        $cur = '[Array]';
+    } elseif (is_null($cur)) {
+        $cur = '[null]';
+    } elseif (!is_scalar($cur)) {
+        $cur = '['.gettype($cur).']';
+    }
+
+    quit("Tipo di valore errato: $cur", $path);
+    exit(1); // Gia fatto!
+
+}
+
+function sniffOutExt($file) {
+
+    $f = str_replace('\\','/',$file);
+    $f = explode('/',$f);
+    $f = $f[count($f) - 1];
+    $f = explode('.',$f);
+
+    if (count($f) > 1) {
+
+        array_shift($f);
+        $isCSV = in_array('csv',$f);
+        $isBin = !$isCSV && in_array('dat',$f);
+        $f = implode('.',$f);
+        $isPack = str_ends_with($f,'.gz');
+
+    } else {
+
+        $isCSV = false;
+        $isBin = false;
+        $isPack = false;
+
+    }
+
+    return [$isCSV, $isBin, $isPack];
+
+}
